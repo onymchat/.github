@@ -1,12 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
-    <img src="assets/logo-light.png" alt="Onym Chat" width="112">
-  </picture>
-</p>
-
-<p align="center">
-  <em>Private group messaging, anchored on Stellar.</em>
+  <em>Private group messaging with governance, anchored on Stellar.</em>
 </p>
 
 <p align="center">
