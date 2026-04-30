@@ -1,0 +1,541 @@
+name: Client smoke test
+description: Pre-release manual smoke checklist for an Onym client (iOS / Android)
+title: "Smoke test: <client>@<version>"
+labels: ["smoke-test", "qa"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Onym client smoke test — pre-release check
+
+        Manual scenarios to run before every release. Goal: in 10–15 minutes on a single device, confirm the critical path is not broken. Scenarios map 1:1 to the stages of the auto-test `uitests.SoloUserJourneyTest` — if something fails in prod, first check what the corresponding auto-test stage does in code.
+
+        > [!IMPORTANT]
+        > **How to use:** check `[x]` next to each item as you go. If even one item fails — **stop the release** and file a bug linked to the corresponding auto-test stage.
+
+        > [!NOTE]
+        > **Solo session.** All scenarios run without a second user: groups are created on the same device, messages go "into the void" (the `SENT` / `FAILED` status is observed visually). Two-device scenarios (deeplink invite, real delivery, knock-and-let-in) are out of smoke scope — that's regression.
+
+        > [!NOTE]
+        > **Destructive operations.** Smoke creates 4 temporary groups with the suffix `… QA` and deletes them at the end (SM-15). Real user groups and identity are not touched.
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: Client
+      options:
+        - Android
+        - iOS
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version (versionName / CFBundleShortVersionString)
+    validations:
+      required: true
+
+  - type: input
+    id: build
+    attributes:
+      label: Build (versionCode / CFBundleVersion)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: flavor
+    attributes:
+      label: Flavor / channel
+      options:
+        - play
+        - fdroid
+        - testflight
+        - app-store
+        - n/a
+    validations:
+      required: true
+
+  - type: dropdown
+    id: variant
+    attributes:
+      label: Build variant
+      options:
+        - debug
+        - release
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device (model + OS + API)
+      placeholder: "e.g., Pixel 7, Android 14 (API 34) — or iPhone 15, iOS 17.4"
+    validations:
+      required: true
+
+  - type: input
+    id: tester
+    attributes:
+      label: Tester
+    validations:
+      required: true
+
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Tick `[x]` as you go. If any item fails, mark NO GO below and file a bug linked to the auto-test stage.
+      value: |
+        ## 0. Environment prep
+
+        - [ ] Fresh build is installed on a physical device (not an emulator / simulator)
+        - [ ] Animations are off — Android: Developer Options (Window/Transition/Animator scale = 0); iOS: Settings → Accessibility → Motion → Reduce Motion
+        - [ ] Wi-Fi is on; internet works (Soroban testnet + Nostr relays are required to create groups)
+        - [ ] Notifications and sound are off
+
+        > [!TIP]
+        > **Do NOT** wipe the app (Android: `pm clear chat.onym.android`; iOS: delete & reinstall) — smoke is written so it doesn't destroy user data. Onboarding is shown only on first launch; if SM-1 doesn't reproduce, install a fresh build on a clean device first.
+
+        ---
+
+        ## SM-1. Cold start + onboarding (page 1)
+
+        > 🤖 Auto-test stage: `stage_01_onboarding_sheet_visible_on_first_launch`
+
+        **Goal:** on first launch, the encryption-themed onboarding bottom sheet is shown.
+
+        ### Steps
+        - [ ] 1. Launch the app from the launcher / home screen (Android: or `adb shell am start -n chat.onym.android/.MainActivity`)
+        - [ ] 2. Wait for the bottom modal sheet to appear (page 1)
+
+        ### Expected
+        - [ ] A sheet with messaging-and-metadata-encryption copy is visible (substring `metadata are encrypted`)
+        - [ ] A `Next` button is visible at the bottom
+        - [ ] The Chats screen shows behind the sheet
+
+        ---
+
+        ## SM-2. Onboarding — all 4 pages + Get Started
+
+        > 🤖 Auto-test stage: `stage_02_walk_through_onboarding_and_dismiss`
+
+        **Goal:** all 4 pages click through; the final `Get Started` closes the sheet and lands you in Chats.
+
+        **Pre-condition:** SM-1 passed; sheet is on page 1.
+
+        ### Steps
+        - [ ] 1. Tap `Next` → page 2 (text `Private by design` is visible)
+        - [ ] 2. Tap `Next` → page 3 (text `Truly shared ownership` is visible)
+        - [ ] 3. Tap `Next` → page 4 (heading `What makes this different` and the `Get Started` button are visible)
+        - [ ] 4. Tap `Get Started` → sheet closes
+
+        ### Expected
+        - [ ] Sheet is fully gone (test tag `groupList.onboardingSheet` is not present)
+        - [ ] Active screen is Chats; bottom navigation is visible (`Contacts` / `Chats` / `Search` / `Settings`)
+        - [ ] Active tab is `Chats`
+
+        > [!WARNING]
+        > **Restore from Recovery Phrase** is intentionally NOT covered by smoke: a tap both navigates and dismisses the sheet (irreversible), and Restore itself overwrites identity. Test only in regression on a separate device.
+
+        ---
+
+        ## SM-3. Create group `Anarchy Crew QA` + first message
+
+        > 🤖 Auto-test stage: `stage_03_create_anarchy_and_send_message`
+
+        **Goal:** "anarchy" governance is created on-chain, the chat opens, the message sends.
+
+        **Pre-condition:** SM-2 done, on Chats.
+
+        ### Steps
+        - [ ] 1. Tap the FAB `+` (bottom-right corner)
+        - [ ] 2. In the `Add Group` dialog, tap `Create`
+        - [ ] 3. On `New Group` (Step 1 of 2):
+          - [ ] Enter the name `Anarchy Crew QA`
+          - [ ] Pick governance `Anarchy`
+          - [ ] Tap `Next`
+        - [ ] 4. On Step 2 of 2, tap `Create`
+        - [ ] 5. Wait for the `Open` button in the top bar (up to 2 minutes — Soroban testnet ledger close)
+        - [ ] 6. Tap `Open` → Chat opens
+        - [ ] 7. Type `Hello anarchy` in the input and tap Send
+        - [ ] 8. Tap Back → return to Chats
+
+        ### Expected
+        - [ ] On the Chat screen, message `Hello anarchy` is rendered
+        - [ ] The message has one of the statuses: `Sending` / `Sent` / `Delivered` / `Tap to retry` (any — the point is the status icon appears)
+        - [ ] Chats lists `Anarchy Crew QA`
+
+        ---
+
+        ## SM-4. Create `Direct Bob QA` (1v1)
+
+        > 🤖 Auto-test stage: `stage_04_create_one_on_one_and_send_message`
+
+        **Goal:** 1v1 governance works (technically a different contract from Anarchy).
+
+        ### Steps
+        - [ ] 1. FAB `+` → `Create`
+        - [ ] 2. Name `Direct Bob QA`, governance `1v1`, Next → Create
+        - [ ] 3. Wait for `Open`, open the chat
+        - [ ] 4. Send `Hi Bob`
+        - [ ] 5. Back to Chats
+
+        ### Expected
+        - [ ] Message `Hi Bob` with a status icon
+        - [ ] Group `Direct Bob QA` is in Chats
+
+        ---
+
+        ## SM-5. Create `Democracy Council QA`
+
+        > 🤖 Auto-test stage: `stage_05_create_democracy_and_send_message`
+
+        **Goal:** Democracy governance is created.
+
+        ### Steps
+        - [ ] 1. FAB `+` → `Create`
+        - [ ] 2. Name `Democracy Council QA`, governance `Democracy`, Next → Create
+        - [ ] 3. Wait for `Open`, open the chat
+        - [ ] 4. Send `Vote on motion`
+        - [ ] 5. Back
+
+        ### Expected
+        - [ ] Message with a status icon
+        - [ ] Group is in Chats
+
+        ---
+
+        ## SM-6. Create `Oligarchy Inner QA`
+
+        > 🤖 Auto-test stage: `stage_06_create_oligarchy_and_send_message`
+
+        **Goal:** Oligarchy governance is created (last of the 4 types).
+
+        ### Steps
+        - [ ] 1. FAB `+` → `Create`
+        - [ ] 2. Name `Oligarchy Inner QA`, governance `Oligarchy`, Next → Create
+        - [ ] 3. Wait for `Open`, open the chat
+        - [ ] 4. Send `Quorum check`
+        - [ ] 5. Back
+
+        ### Expected
+        - [ ] Message with a status icon
+        - [ ] Group is in Chats; **4 groups** with the `QA` suffix are visible total
+
+        ---
+
+        ## SM-7. Open Group Info from chat + Back
+
+        > 🤖 Auto-test stage: `stage_07_open_group_info_from_chat_and_back`
+
+        **Goal:** the Group Info screen opens with correct hero data; Back returns to the chat.
+
+        ### Steps
+        - [ ] 1. In Chats, tap `Anarchy Crew QA` → Chat opens
+        - [ ] 2. Tap the header (group name) → Group Info opens
+        - [ ] 3. Tap the Back arrow in the top app bar
+        - [ ] 4. Tap Back once more → back in Chats
+
+        ### Expected
+        - [ ] Group Info shows: group name, an `End-to-end encrypted` chip, the section header `MEMBERS`
+        - [ ] After two Backs — back in Chats; the list of 4 groups is intact
+
+        > [!WARNING]
+        > `Invite member` / `Leave group` / `Delete group` from this screen are not covered by smoke (they need a second user or break the group irreversibly).
+
+        ---
+
+        ## SM-8. Pin / Unpin a group via context menu
+
+        > 🤖 Auto-test stage: `stage_08_pin_group_then_long_press_shows_unpin`
+
+        **Goal:** long-press opens the context menu; Pin pins (the row pops to the top + 📌 next to the name); reopening the menu shows Unpin.
+
+        ### Steps
+        - [ ] 1. In Chats, long-press `Anarchy Crew QA`
+        - [ ] 2. An alert dialog opens with the title `Anarchy Crew QA` and items `📌 Pin` / `🗑️ Delete`
+        - [ ] 3. Tap `Pin`
+        - [ ] 4. Dialog closes; the group jumps to the top with a 📌 next to the name
+        - [ ] 5. Long-press `Anarchy Crew QA` again
+        - [ ] 6. The menu now shows `❌ Unpin` (instead of Pin)
+        - [ ] 7. Tap `Unpin`
+        - [ ] 8. Dialog closes; 📌 is gone; group order returns to the previous one
+
+        ### Expected
+        - [ ] Pin/Unpin reacts instantly (under 500 ms each step)
+        - [ ] In Chats, all 4 QA groups are still in place
+
+        ---
+
+        ## SM-9. Search — find a group by name
+
+        > 🤖 Auto-test stage: `stage_09_search_finds_created_group_by_name`
+
+        **Goal:** global search finds a group by part of its name.
+
+        ### Steps
+        - [ ] 1. Bottom-nav → tab `Search`
+        - [ ] 2. Enter `Anarchy Crew` in the search field
+        - [ ] 3. Wait for the result
+
+        ### Expected
+        - [ ] The result includes `Anarchy Crew QA`
+        - [ ] Clearing the field — results empty again (placeholder `Search across all your chats and messages.`)
+
+        ---
+
+        ## SM-10. Settings — Invite Key tab by default
+
+        > 🤖 Auto-test stage: `stage_10_settings_lands_on_invite_tab_by_default`
+
+        **Goal:** the first time you enter Settings, the Invite Key tab is active with a QR code and a `Share link` button.
+
+        ### Steps
+        - [ ] 1. Bottom-nav → tab `Settings`
+        - [ ] 2. The segmented control `Invite Key` / `Preferences` is visible (with `Invite Key` selected)
+        - [ ] 3. A QR code is rendered on screen
+
+        ### Expected
+        - [ ] The `Share link` button is rendered and active
+
+        ---
+
+        ## SM-11. Settings → Preferences: 5 sections visible
+
+        > 🤖 Auto-test stage: `stage_11_settings_preferences_shows_all_sections`
+
+        **Goal:** all 5 section headers are rendered on the Preferences tab.
+
+        ### Steps
+        - [ ] 1. In Settings, switch to the `Preferences` tab
+
+        ### Expected — all 5 headers are visible (scroll if needed):
+        - [ ] `NETWORK`
+        - [ ] `PROTOCOL`
+        - [ ] `SECURITY`
+        - [ ] `ADVANCED`
+        - [ ] `ABOUT`
+
+        ---
+
+        ## SM-12. Settings sub-screens: open 4 and Back
+
+        > 🤖 Auto-test stage: `stage_12_settings_sub_screens_open_and_back`
+
+        **Goal:** 4 sub-screens open, each shows a recognizable anchor, Back returns to Settings and **keeps the Preferences tab** (see the `rememberSaveable` fix).
+
+        **Pre-condition:** Settings → Preferences (SM-11).
+
+        ### Steps
+        - [ ] 1. Tap `Relays` → header `ADD RELAY` is visible → Back → still on Preferences (NOT Invite!)
+        - [ ] 2. Tap `Blossom Servers` → `ADD SERVER` is visible → Back → Preferences
+        - [ ] 3. Tap `Stellar Contract` → `RELAYER (OPTIONAL)` is visible → Back → Preferences
+        - [ ] 4. Tap `Advanced` → `NOSTR IDENTITY` is visible → Back → Preferences
+
+        ### Expected
+        - [ ] After each Back: the `Preferences` tab is still active; the `Settings` title is shown
+        - [ ] All 4 sub-screens open with no delay > 1 sec
+
+        > [!NOTE]
+        > Sub-screen contents (relay list, add/remove buttons, statuses) are out of smoke scope: in demo mode some are hidden, real content depends on the network. Smoke only checks that the screen opens.
+
+        ---
+
+        ## SM-13. Recovery Phrase — Intro screen + Cancel
+
+        > 🤖 Auto-test stage: `stage_13_settings_recovery_phrase_intro_and_cancel`
+
+        **Goal:** enter the Recovery Phrase wizard, see the intro, cancel WITHOUT entering a phrase or biometric.
+
+        **Pre-condition:** Settings → Preferences.
+
+        ### Steps
+        - [ ] 1. Tap `Backup Recovery Phrase`
+        - [ ] 2. Intro screen with header `Back up keys` is visible
+        - [ ] 3. Tap `Cancel` (text button, in the navigation)
+
+        ### Expected
+        - [ ] Wizard closes; back in Settings (Preferences active)
+
+        > [!CAUTION]
+        > **Do not go past intro** — the next wizard step triggers the system biometric prompt (BiometricPrompt on Android, LAContext on iOS), which is not controllable from the UI test framework and may pop over your personal device's UI.
+
+        ---
+
+        ## SM-14. Bottom-nav: Contacts tab opens
+
+        > 🤖 Auto-test stage: `stage_14_contacts_tab_renders`
+
+        **Goal:** the Contacts tab opens without crashes.
+
+        ### Steps
+        - [ ] 1. Bottom-nav → tab `Contacts`
+
+        ### Expected
+        - [ ] Contacts screen is rendered (test tag `contacts.screen` present)
+        - [ ] Depending on the contacts permission state, you see either `Sync your phone contacts...`, a list, or `No Contacts`
+
+        > [!NOTE]
+        > Do not tap the contacts sync button — it requests a system permission. Smoke only checks that the screen renders.
+
+        ---
+
+        ## SM-15. Return to Chats and delete the 4 QA groups
+
+        > 🤖 Auto-test stages: `stage_15_returning_to_chats_keeps_all_created_groups` + `@After cleanupCreatedGroups`
+
+        **Goal:** all 4 groups are still there after tab navigation; finally, delete the 4 QA groups so the device returns to its original state.
+
+        ### Steps
+        - [ ] 1. Bottom-nav → tab `Chats`
+        - [ ] 2. All 4 groups are visible:
+          - [ ] `Anarchy Crew QA`
+          - [ ] `Direct Bob QA`
+          - [ ] `Democracy Council QA`
+          - [ ] `Oligarchy Inner QA`
+        - [ ] 3. Delete **each** via long-press → `🗑️ Delete` → `Delete` to confirm:
+          - [ ] `Anarchy Crew QA` deleted
+          - [ ] `Direct Bob QA` deleted
+          - [ ] `Democracy Council QA` deleted
+          - [ ] `Oligarchy Inner QA` deleted
+
+        ### Expected
+        - [ ] No groups with the `QA` suffix remain in Chats
+        - [ ] Real user groups (if any) are still there, untouched
+
+        ---
+
+        ## ✅ Final post-smoke checks
+
+        - [ ] In the OS app settings, the app is not stuck in "recents" with a crash dialog
+        - [ ] Android: `adb logcat -d | grep -iE 'fatal|androidruntime'` is empty (or only third-party crashes)
+        - [ ] iOS: no crash reports in Console.app for the bundle id
+        - [ ] The deleted QA groups do not come back after re-opening Chats
+
+        ---
+
+        ## 🚫 What this smoke does NOT cover (intentionally)
+
+        > [!TIP]
+        > If you want to check anything below — that's regression. Open a separate checklist and book a separate slot. As features mature toward prod, move them into smoke one by one.
+
+        <details>
+        <summary><strong>Out of solo session (needs a second user / device)</strong></summary>
+
+        - OnboardLandingScreen (`You're invited`) — only opens via deeplink invite
+        - Real invite acceptance and joining a group
+        - Multi-user messages and delivery via Nostr relay
+        - Membership operations with a valid charter (knock-and-let-in, kick, role change)
+
+        </details>
+
+        <details>
+        <summary><strong>Out of UI-test scope (system UI / permissions)</strong></summary>
+
+        - Recovery Phrase reveal: after Intro, the system biometric prompt is invoked — not reachable from the test framework
+        - Restore identity happy-path — `replaceKeyManager` irreversibly overwrites identity
+        - Permission prompts: Camera, Contacts, Notifications, Microphone
+        - QR scanning and `Paste from Clipboard` (Scan needs Camera; Paste pulls clipboard noise)
+
+        </details>
+
+        <details>
+        <summary><strong>Destructive / irreversible</strong></summary>
+
+        - Settings → "Generate new identity" (confirm path) — re-creates BIP39, makes all groups read-only
+        - Leave / Delete group from Group Info screen (only long-press delete from the list is covered)
+        - F-Droid-specific scenarios (if smoke runs on the play flavor)
+
+        </details>
+
+        <details>
+        <summary><strong>Not implemented in code, or dead code</strong></summary>
+
+        - LegacyIdentityScreen (legacy pre-BIP39 instance)
+        - FirstGroupScreen / FirstJoinScreen (defined, but no entry point in `MainActivity`)
+
+        </details>
+
+        <details>
+        <summary><strong>Render-only checks</strong></summary>
+
+        - Settings sub-screens — content (relay list, blossom statuses, contract): network-dependent, smoke only checks the header
+        - Contacts screen — list of contacts: depends on the system permission
+
+        </details>
+
+        ---
+
+        ## 🔗 Related auto-tests
+
+        If smoke fails — first run the corresponding auto-test stage. If the stage is green, the issue is most likely environment / device, not code.
+
+        | Smoke | Stage `uitests.SoloUserJourneyTest` |
+        |:------|:------------------------------------|
+        | SM-1  | `stage_01_onboarding_sheet_visible_on_first_launch` |
+        | SM-2  | `stage_02_walk_through_onboarding_and_dismiss` |
+        | SM-3  | `stage_03_create_anarchy_and_send_message` |
+        | SM-4  | `stage_04_create_one_on_one_and_send_message` |
+        | SM-5  | `stage_05_create_democracy_and_send_message` |
+        | SM-6  | `stage_06_create_oligarchy_and_send_message` |
+        | SM-7  | `stage_07_open_group_info_from_chat_and_back` |
+        | SM-8  | `stage_08_pin_group_then_long_press_shows_unpin` |
+        | SM-9  | `stage_09_search_finds_created_group_by_name` |
+        | SM-10 | `stage_10_settings_lands_on_invite_tab_by_default` |
+        | SM-11 | `stage_11_settings_preferences_shows_all_sections` |
+        | SM-12 | `stage_12_settings_sub_screens_open_and_back` |
+        | SM-13 | `stage_13_settings_recovery_phrase_intro_and_cancel` |
+        | SM-14 | `stage_14_contacts_tab_renders` |
+        | SM-15 | `stage_15_returning_to_chats_keeps_all_created_groups` + `@After cleanupCreatedGroups` |
+
+        ### Run the full solo-journey auto-test (Android)
+
+        ```bash
+        cd clients/android/StellarChat
+        ./scripts/run-solo-journey.sh
+        ```
+
+        The script:
+        1. Runs `:app:connectedPlayDebugAndroidTest` filtered to `uitests.SoloUserJourneyTest`.
+        2. Pulls the markdown reports off the device into `result_autotest/autotest-reports/`.
+        3. On either outcome (PASS / FAIL) the report includes a stage timeline + duration; on FAIL it adds a stack trace + logcat dump.
+
+        Report files: `result_autotest/autotest-reports/solo-journey-YYYYMMDD-HHMMSS-{PASS|FAIL}.md`.
+
+        ### Manual run (no wrapper)
+
+        ```bash
+        cd clients/android/StellarChat
+        ./gradlew :app:connectedPlayDebugAndroidTest \
+          -Pandroid.testInstrumentationRunnerArguments.class=uitests.SoloUserJourneyTest
+
+        # Then pull the report manually:
+        adb pull /sdcard/Android/data/chat.onym.android/files/autotest-reports ./result_autotest/
+        ```
+    validations:
+      required: true
+
+  - type: dropdown
+    id: decision
+    attributes:
+      label: Release decision
+      options:
+        - GO — all 15 smoke items green
+        - NO GO — at least one item failed
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / failures
+      description: If NO GO, describe the failures and link to the relevant auto-test stage.
