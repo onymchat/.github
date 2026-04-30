@@ -94,11 +94,9 @@ Pairing-friendly host calls (BLS12-381, CAP-0059) and Poseidon as a host functio
 
 The org is laid out in layers, top-to-bottom:
 
-`onym-ios`  ·  `onym-android`  ·  `onym-sdk-swift`  ·  `onym-sdk-kotlin`  ·  `onym-relayer`
+`onym-ios`  ·  `onym-android`  ·  `onym-sdk-swift`  ·  `onym-sdk-kotlin`  ·  `onym-relayer`  ·  `onym-contracts`
 
-Per-governance modules (Rust circuit + Soroban contract):
-
-`onym-sep-1v1`  ·  `onym-sep-anarchy`  ·  `onym-sep-democracy`  ·  `onym-sep-tyranny`  ·  `onym-sep-oligarchy`
+`onym-contracts` ships all five Soroban contracts — one per governance shape — in a single Cargo workspace.
 
 Reference:
 

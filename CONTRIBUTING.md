@@ -20,7 +20,7 @@ That's it. No CLA, no style committee, no required templates beyond what each re
 | Swift SDK | [`onym-sdk-swift`](https://github.com/onymchat/onym-sdk-swift) |
 | Kotlin SDK | [`onym-sdk-kotlin`](https://github.com/onymchat/onym-sdk-kotlin) |
 | Relayer | [`onym-relayer`](https://github.com/onymchat/onym-relayer) |
-| Per-governance modules (Rust circuit + Soroban contract) | [`onym-sep-1v1`](https://github.com/onymchat/onym-sep-1v1), [`onym-sep-anarchy`](https://github.com/onymchat/onym-sep-anarchy), [`onym-sep-democracy`](https://github.com/onymchat/onym-sep-democracy), [`onym-sep-tyranny`](https://github.com/onymchat/onym-sep-tyranny), [`onym-sep-oligarchy`](https://github.com/onymchat/onym-sep-oligarchy) |
+| Soroban contracts (one per governance shape: 1v1, anarchy, democracy, tyranny, oligarchy) | [`onym-contracts`](https://github.com/onymchat/onym-contracts) |
 | Papers | [`onym-papers`](https://github.com/onymchat/onym-papers) |
 | Docs | [`onym-docs`](https://github.com/onymchat/onym-docs) |
 
@@ -36,7 +36,7 @@ AI-assisted contributions are welcome. Claude Code, Copilot, Cursor, and similar
 ## What to keep in mind
 
 - **Scope:** Onym is a privacy-critical cryptographic system. Small, focused PRs land faster than large ones. If your change touches the circuits, verifier, or epoch logic, expect a slower review.
-- **Cross-repo changes:** if a change spans multiple repos (e.g. SDK + client app, or circuit + contract in the same `onym-sep-*` module), open the PRs together and link them in each description.
+- **Cross-repo changes:** if a change spans multiple repos (e.g. SDK + client app, or a contract update in `onym-contracts` paired with an SDK change), open the PRs together and link them in each description.
 - **Documentation:** if you change behavior documented in [`onym-docs`](https://github.com/onymchat/onym-docs) or in a paper under [`onym-papers`](https://github.com/onymchat/onym-papers), update the doc in the same PR (or open a paired PR there and link it).
 - **Security issues:** do not file them as public issues or PRs. See [`SECURITY.md`](SECURITY.md).
 

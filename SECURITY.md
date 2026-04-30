@@ -14,7 +14,7 @@ Only the latest minor release line of each component receives security updates. 
 | Latest tagged release | :white_check_mark: |
 | Prior releases | :x: |
 
-The on-chain Soroban contracts are versioned independently per governance module. Deployed contract addresses and their corresponding commit hashes are tracked in each `onym-sep-*` repository.
+The on-chain Soroban contracts are versioned independently per governance shape inside [`onym-contracts`](https://github.com/onymchat/onym-contracts). Deployed contract addresses and their corresponding commit hashes are tracked there.
 
 ## Reporting a Vulnerability
 
@@ -28,11 +28,7 @@ Please report vulnerabilities via one of:
    - [onym-sdk-swift](https://github.com/onymchat/onym-sdk-swift/security)
    - [onym-sdk-kotlin](https://github.com/onymchat/onym-sdk-kotlin/security)
    - [onym-relayer](https://github.com/onymchat/onym-relayer/security)
-   - [onym-sep-1v1](https://github.com/onymchat/onym-sep-1v1/security)
-   - [onym-sep-anarchy](https://github.com/onymchat/onym-sep-anarchy/security)
-   - [onym-sep-democracy](https://github.com/onymchat/onym-sep-democracy/security)
-   - [onym-sep-tyranny](https://github.com/onymchat/onym-sep-tyranny/security)
-   - [onym-sep-oligarchy](https://github.com/onymchat/onym-sep-oligarchy/security)
+   - [onym-contracts](https://github.com/onymchat/onym-contracts/security)
    - [onym-papers](https://github.com/onymchat/onym-papers/security)
    - [onym-docs](https://github.com/onymchat/onym-docs/security)
 
@@ -50,9 +46,9 @@ Please include:
 
 ### In scope
 
-- Soundness or zero-knowledge breaks in the Groth16 circuits of any governance module (`onym-sep-*`)
-- Verifier bugs in any deployed Soroban contract (`onym-sep-*`), including BLS12-381 host-call misuse
-- Epoch-ordering, replay, or commitment-binding flaws across any governance module
+- Soundness or zero-knowledge breaks in the Groth16 circuits of any governance shape
+- Verifier bugs in any deployed Soroban contract (`onym-contracts`), including BLS12-381 host-call misuse
+- Epoch-ordering, replay, or commitment-binding flaws across any governance shape
 - Key handling issues in the Swift / Kotlin SDKs (`onym-sdk-swift`, `onym-sdk-kotlin`) and the client apps (`onym-ios`, `onym-android`)
 - Relayer vulnerabilities that leak fee-payer identity or enable request forgery (`onym-relayer`)
 - Nostr transport issues that leak plaintext, leak metadata beyond what is documented, or break AES-256-GCM framing
