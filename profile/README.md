@@ -100,6 +100,51 @@ Reference:
 
 `onym-papers`  ·  `onym-docs`
 
+## Design-space topology — where we are, where we're heading
+
+```
+                          DESIGN-SPACE TOPOLOGY
+                     (★ = where we are now, ▷ = aimed-at)
+
+
+              PAST                   PRESENT                  FUTURE
+            ─────────               ─────────                ─────────
+
+         ┌─────────────┐        ┌─────────────┐          ┌─────────────┐
+         │   C1-old    │        │    C1 ★     │          │     C7      │
+         │             │        │             │          │             │
+         │  Groth16    │ ──Δ──► │   PLONK     │ ──╳──►   │  Stellar +  │
+         │  + per-     │        │   + KZG     │          │  Plonky3 +  │
+         │  circuit    │ SNARK  │   + EF SRS  │ blocked  │     FRI     │
+         │  MPC × 30   │ family │             │ on FRI   │             │
+         │             │ swap + │  pairing-   │ host     │  hash-based │
+         │ pairing-    │ SRS    │  based      │ functions│  PQ ★★      │
+         │ based       │ reuse  │             │          │             │
+         │             │        │             │          │  transparent│
+         │ trapdoor:   │        │ trapdoor:   │          │  setup      │
+         │ 1-of-N ×30  │        │ 1-of-141k×1 │          │             │
+         └─────────────┘        └──────┬──────┘          └─────────────┘
+            (deprecated)               │                  (post-quantum,
+                                       │                   host-blocked,
+                                       │                    Class b)
+                              Class (a)│
+                              anchor   │  trade Stellar
+                              change   │  for PQ today
+                                       ▼
+                                ┌─────────────┐
+                                │     C6      │
+                                │             │
+                                │ StarkNet +  │
+                                │   STARK     │
+                                │             │
+                                │  hash-based │
+                                │  PQ ★★      │
+                                │  transparent│
+                                │  setup      │
+                                └─────────────┘
+
+```
+
 ## Links
 
 [onym.chat](https://onym.chat)  ·  Telegram [@onymchat](https://t.me/onymchat)  ·  Twitter [@onymchat](https://x.com/onymchat)
