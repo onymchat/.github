@@ -15,7 +15,8 @@ That's it. No CLA, no style committee, no required templates beyond what each re
 
 | Component | Repo |
 | --------- | ---- |
-| iOS + Android apps | [`onym-clients`](https://github.com/onymchat/onym-clients) |
+| iOS app | [`onym-ios`](https://github.com/onymchat/onym-ios) |
+| Android app | [`onym-android`](https://github.com/onymchat/onym-android) |
 | Swift SDK | [`onym-sdk-swift`](https://github.com/onymchat/onym-sdk-swift) |
 | Kotlin SDK | [`onym-sdk-kotlin`](https://github.com/onymchat/onym-sdk-kotlin) |
 | Relayer | [`onym-relayer`](https://github.com/onymchat/onym-relayer) |

@@ -23,7 +23,8 @@ The on-chain Soroban contracts are versioned independently per governance module
 Please report vulnerabilities via one of:
 
 1. **GitHub Private Vulnerability Reporting** — preferred. Use the "Report a vulnerability" button under the Security tab of the affected repository:
-   - [onym-clients](https://github.com/onymchat/onym-clients/security) — iOS + Android apps
+   - [onym-ios](https://github.com/onymchat/onym-ios/security)
+   - [onym-android](https://github.com/onymchat/onym-android/security)
    - [onym-sdk-swift](https://github.com/onymchat/onym-sdk-swift/security)
    - [onym-sdk-kotlin](https://github.com/onymchat/onym-sdk-kotlin/security)
    - [onym-relayer](https://github.com/onymchat/onym-relayer/security)
@@ -52,7 +53,7 @@ Please include:
 - Soundness or zero-knowledge breaks in the Groth16 circuits of any governance module (`onym-sep-*`)
 - Verifier bugs in any deployed Soroban contract (`onym-sep-*`), including BLS12-381 host-call misuse
 - Epoch-ordering, replay, or commitment-binding flaws across any governance module
-- Key handling issues in the Swift / Kotlin SDKs (`onym-sdk-swift`, `onym-sdk-kotlin`) and the client apps (`onym-clients`)
+- Key handling issues in the Swift / Kotlin SDKs (`onym-sdk-swift`, `onym-sdk-kotlin`) and the client apps (`onym-ios`, `onym-android`)
 - Relayer vulnerabilities that leak fee-payer identity or enable request forgery (`onym-relayer`)
 - Nostr transport issues that leak plaintext, leak metadata beyond what is documented, or break AES-256-GCM framing
 - Build and release supply-chain issues (reproducibility, signing, distributed artifacts)
