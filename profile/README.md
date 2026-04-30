@@ -98,6 +98,6 @@ The org is laid out in layers, top-to-bottom:
 
 ## Links
 
-[onym.chat](https://onym.chat)
+[onym.chat](https://onym.chat)  ·  Telegram [@onymchat](https://t.me/onymchat)  ·  Twitter [@onymchat](https://x.com/onymchat)
 
 <br>
