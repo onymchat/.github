@@ -19,19 +19,24 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
 
 ## Architecture
 
-```
+<pre>
                            user
                              │
                              │  propose · vote · evict
-                             ▼
-            ┌─────────────────────────────────┐
-            │      iOS  ·  Android  apps      │   01   clients
-            └────────────────┬────────────────┘
                              │
-                             ▼
-            ┌─────────────────────────────────┐
-            │     Swift  ·  Kotlin   SDKs     │   02   bindings
-            └────────────────┬────────────────┘
+               ┌─────────────┴─────────────┐
+               │                           │
+               ▼                           ▼
+    ┌─────────────────────┐     ┌─────────────────────┐
+    │       <a href="https://github.com/onymchat/onym-ios">iOS</a> app       │     │     <a href="https://github.com/onymchat/onym-android">Android</a> app     │   01   clients
+    └──────────┬──────────┘     └──────────┬──────────┘
+               │                           │
+               ▼                           ▼
+    ┌─────────────────────┐     ┌─────────────────────┐
+    │      <a href="https://github.com/onymchat/onym-sdk-swift">Swift SDK</a>      │     │     <a href="https://github.com/onymchat/onym-sdk-kotlin">Kotlin SDK</a>      │   02   bindings
+    └──────────┬──────────┘     └──────────┬──────────┘
+               │                           │
+               └─────────────┬─────────────┘
                              │
                              ▼
             ┌─────────────────────────────────┐
@@ -47,14 +52,14 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
                │                           │
                ▼                           ▼
     ┌─────────────────────┐     ┌─────────────────────┐
-    │   Nostr · Blossom   │     │       Relayer       │
+    │   Nostr · Blossom   │     │       <a href="https://github.com/onymchat/onym-relayer">Relayer</a>       │
     │                     │     │        (Axum)       │   04   gas
     │   E2E msgs · blobs  │     │     signs · pays    │
     └─────────────────────┘     └──────────┬──────────┘
        transport layer
        off-chain · side channel            ▼
                                 ┌─────────────────────┐
-                                │   Soroban contract  │
+                                │   <a href="https://github.com/onymchat/onym-contracts">Soroban contract</a>  │
                                 │      3 pairings     │   05   on-chain
                                 │   ~7M instructions  │
                                 └──────────┬──────────┘
@@ -70,7 +75,7 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
            governance — enforced in-circuit, not by policy
 
            1v1   ·   anarchy   ·   democracy   ·   tyranny   ·   oligarchy
-```
+</pre>
 
 ## Governance
 
