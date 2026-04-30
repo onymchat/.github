@@ -34,11 +34,11 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
                              ▼
             ┌─────────────────────────────────┐
             │            Rust  core           │
-            │    Groth16 prover · Poseidon    │   03   proving
+            │     PLONK prover · Poseidon     │   03   proving
             │            BLS12-381            │
             └────────────────┬────────────────┘
                              │
-                             │   192-byte proof
+                             │   1601-byte proof
                              │   +  32-byte next commitment
                              │
                ┌─────────────┴─────────────┐
@@ -53,8 +53,8 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
        off-chain · side channel            ▼
                                 ┌─────────────────────┐
                                 │   <a href="https://github.com/onymchat/onym-contracts">Soroban contract</a>  │
-                                │      3 pairings     │   05   on-chain
-                                │   ~7M instructions  │
+                                │      2 pairings     │   05   on-chain
+                                │  ~12M instructions  │
                                 └──────────┬──────────┘
                                            │
                                            ▼   emits event
@@ -72,7 +72,7 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
 
 ## Governance
 
-Five shapes of trust. All enforced inside the Groth16 proof — never by policy, never by a moderator.
+Five shapes of trust. All enforced inside the PLONK proof — never by policy, never by a moderator.
 
 **1v1** — Two-party thread. Strongest privacy guarantee, simplest commitment.
 
@@ -86,7 +86,7 @@ Five shapes of trust. All enforced inside the Groth16 proof — never by policy,
 
 ## Why Stellar
 
-Pairing-friendly host calls (BLS12-381, CAP-0059) and Poseidon as a host function (CAP-0075) make Groth16 verification practical at production cost. The relayer-pays model means users don't need a funded account, a wallet, or a native asset to send a message.
+Pairing-friendly host calls (BLS12-381, CAP-0059) and Poseidon as a host function (CAP-0075) make PLONK verification practical at production cost. The relayer-pays model means users don't need a funded account, a wallet, or a native asset to send a message.
 
 ## Repos
 
