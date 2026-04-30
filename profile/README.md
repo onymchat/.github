@@ -94,7 +94,15 @@ Pairing-friendly host calls (BLS12-381, CAP-0059) and Poseidon as a host functio
 
 The org is laid out in layers, top-to-bottom:
 
-`onym-ios`  ·  `onym-android`  ·  `onym-sdk-swift`  ·  `onym-sdk-kotlin`  ·  `onym-core` (Rust)  ·  `onym-relayer`  ·  `onym-contract` (Soroban)  ·  `onym-paper`
+`onym-clients` (iOS + Android)  ·  `onym-sdk-swift`  ·  `onym-sdk-kotlin`  ·  `onym-relayer`
+
+Per-governance modules (Rust circuit + Soroban contract):
+
+`onym-sep-1v1`  ·  `onym-sep-anarchy`  ·  `onym-sep-democracy`  ·  `onym-sep-tyranny`  ·  `onym-sep-oligarchy`
+
+Reference:
+
+`onym-papers`  ·  `onym-docs`
 
 ## Links
 
