@@ -34,7 +34,7 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
                              ▼
             ┌─────────────────────────────────┐
             │            Rust  core           │
-            │     PLONK prover · Poseidon     │   03   proving
+            │     <a href="https://github.com/onymchat/onym-contracts/tree/main/plonk/prover">PLONK prover</a> · Poseidon     │   03   proving
             │            BLS12-381            │
             └────────────────┬────────────────┘
                              │
@@ -52,7 +52,7 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
        transport layer
        off-chain · side channel            ▼
                                 ┌─────────────────────┐
-                                │   <a href="https://github.com/onymchat/onym-contracts">Soroban contract</a>  │
+                                │   <a href="https://github.com/onymchat/onym-contracts/tree/main/plonk">Soroban contract</a>  │
                                 │      2 pairings     │   05   on-chain
                                 │  ~12M instructions  │
                                 └──────────┬──────────┘
