@@ -123,25 +123,10 @@ Reference:
          │             │        │             │          │  transparent│
          │ trapdoor:   │        │ trapdoor:   │          │  setup      │
          │ 1-of-N ×30  │        │ 1-of-141k×1 │          │             │
-         └─────────────┘        └──────┬──────┘          └─────────────┘
-            (deprecated)               │                  (post-quantum,
-                                       │                   host-blocked,
-                                       │                    Class b)
-                              Class (a)│
-                              anchor   │  trade Stellar
-                              change   │  for PQ today
-                                       ▼
-                                ┌─────────────┐
-                                │     C6      │
-                                │             │
-                                │ StarkNet +  │
-                                │   STARK     │
-                                │             │
-                                │  hash-based │
-                                │  PQ ★★      │
-                                │  transparent│
-                                │  setup      │
-                                └─────────────┘
+         └─────────────┘        └─────────────┘          └─────────────┘
+            (deprecated)                                  (post-quantum,
+                                                           host-blocked,
+                                                            Class b)
 
 ```
 
