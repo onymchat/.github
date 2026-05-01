@@ -78,11 +78,11 @@ Five shapes of trust. All enforced inside the PLONK proof — never by policy, n
 
 **Anarchy** — Open-add for trusted circles. No moderator, no ceremony.
 
-**Democracy** — ≥50% of current members co-open the next commitment in-circuit. Quorum is a circuit constraint.
+**Democracy** — ≥50% of current members co-open the next commitment in-circuit. **Not shipping today** — the current circuit accepts simplified proofs that do not enforce the K-of-N member quorum; the threshold gate is deferred until the K_MAX > 2 prover work lands. Don't pick this flavor for production until that ships.
 
 **Tyranny** — Single root authority. Fast updates, no quorum, no recourse.
 
-**Oligarchy** — Separate admin Merkle tree. Editors gate commitment updates; editors stay distinct from members.
+**Oligarchy** — Separate admin Merkle tree, K-of-N admin quorum gates commitment updates (K up to 2 today, K_MAX raises planned). At threshold = 2, two co-signing admins are required — it is not a "any single admin can update the tree" model. Editors stay distinct from members.
 
 ## Why Stellar
 
