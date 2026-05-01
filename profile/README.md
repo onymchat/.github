@@ -60,7 +60,8 @@ Group membership lives inside a zero-knowledge proof. The Stellar ledger holds 3
                                            ▼   emits event
                                 ┌─────────────────────┐
                                 │    Stellar ledger   │
-                                │   32 bytes / group  │       ← only public state
+                                │  32-byte commitment │       ← only hiding state
+                                │      per group      │
                                 │  opaque · constant  │
                                 └─────────────────────┘
 
