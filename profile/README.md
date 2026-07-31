@@ -133,6 +133,6 @@ Reference:
 
 ## Links
 
-[onym.chat](https://onym.app)  ·  Telegram [@onymchat](https://t.me/onymapp)  ·  Twitter [@onymchat](https://x.com/onymapp)
+[onym.app](https://onym.app)  ·  Telegram [@onymapp](https://t.me/onymapp)  ·  Twitter [@onymapp](https://x.com/onymapp)
 
 <br>
